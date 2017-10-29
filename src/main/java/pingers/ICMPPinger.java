@@ -1,6 +1,9 @@
 package pingers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringJoiner;
 
 public class ICMPPinger extends Pinger {
 
@@ -14,6 +17,16 @@ public class ICMPPinger extends Pinger {
 
         if (process.exitValue() == 0)
             response.setSuccess();
+        else
+            response.setUnsucess();
+
+        final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        StringJoiner sj = new StringJoiner(System.getProperty("line.separator"));
+        reader.lines().iterator().forEachRemaining(sj::add);
+        response.setResultMessage(sj.toString());
+
+        process.destroy();
 
         return response;
     }

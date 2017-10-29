@@ -19,6 +19,7 @@ public class ICMPPingerTest {
 
         // Assert
         assertTrue(response.getSuccess());
+        assertNotNull(response.getResultMessage());
     }
 
     @Test
@@ -32,5 +33,6 @@ public class ICMPPingerTest {
 
         // Assert
         assertFalse(response.getSuccess());
+        assertNotNull(response.getResultMessage());
     }
 }
