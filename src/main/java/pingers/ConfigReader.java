@@ -9,9 +9,13 @@ import static java.util.Objects.nonNull;
 
 public class ConfigReader {
 
-    private final static String CONFIG_FILE_NAME = "config.properties";
+    private static final String CONFIG_FILE_NAME = "config.properties";
 
-    private final static String STRING_LIMITER = ",";
+    private static final String STRING_LIMITER = ",";
+
+    private ConfigReader() {
+        throw new IllegalStateException("This is a helper class. It is not necessary instantiated it.");
+    }
 
     public static String readAsString(String key) throws IOException {
 
