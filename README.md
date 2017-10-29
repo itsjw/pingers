@@ -1,3 +1,6 @@
 # pingers
 
-* Task list
+## Task list
+
+* Verify lost packet when verifying result
+* Add timeout to pingers

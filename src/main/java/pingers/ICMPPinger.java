@@ -38,8 +38,6 @@ public class ICMPPinger extends Pinger {
             process.destroy();
         }
 
-
-
         return response;
     }
 }
