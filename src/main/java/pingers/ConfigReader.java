@@ -37,4 +37,21 @@ public class ConfigReader {
 
         return readAsString(key).split(STRING_LIMITER);
     }
+
+    public static Integer readAsIntArray(String key) throws IOException {
+
+        Integer converted = null;
+
+        try {
+            String rawValue = readAsString(key);
+
+            if (nonNull(rawValue)) {
+                converted = Integer.parseInt(rawValue);
+            }
+        } catch (NumberFormatException numberFormatException) {
+            converted = null;
+        }
+
+        return converted;
+    }
 }

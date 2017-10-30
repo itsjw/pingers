@@ -29,4 +29,14 @@ public class ConfigReaderTest {
         // Assert
         assertArrayEquals(new String[]{ "jasmin.com","oranum.com" }, value);
     }
+
+    @Test
+    public void given_valid_file_when_read_int_property_should_return_value() throws IOException {
+
+        // Act
+        int value = ConfigReader.readAsIntArray("pingDelay");
+
+        // Assert
+        assertEquals(1000, value);
+    }
 }
