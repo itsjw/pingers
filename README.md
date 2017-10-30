@@ -9,3 +9,4 @@
 * Improve unit tests of Reporter class
 * Add and justify log4J
 * Justify why build serialization manually
+* Fix assert of PingSchedulerTest

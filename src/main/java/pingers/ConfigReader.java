@@ -38,7 +38,7 @@ public class ConfigReader {
         return readAsString(key).split(STRING_LIMITER);
     }
 
-    public static Integer readAsIntArray(String key) throws IOException {
+    public static Integer readAsInt(String key) throws IOException {
 
         Integer converted = null;
 
