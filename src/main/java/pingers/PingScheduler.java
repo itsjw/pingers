@@ -61,6 +61,7 @@ public class PingScheduler {
                     if (!lastResponse.getSuccess()) {
                         Map<String, String> parameters = new HashMap<>();
                         parameters.put("last_icmp", lastResponse.getResultMessage());
+                        parameters.put("host", host);
                         reporter.report(parameters);
                     }
 
@@ -71,7 +72,6 @@ public class PingScheduler {
                     e.printStackTrace();
                 }
             };
-
 
             final int period = nonNull(delay) ? delay : INTERVAL;
 
