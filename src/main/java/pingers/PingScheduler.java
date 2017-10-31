@@ -10,29 +10,33 @@ import static java.util.Objects.nonNull;
 
 public class PingScheduler {
 
-    public static final int DELAY_DEFAULT = 1000;
+    private static final int INTERVAL = 1000;
+
+    private static final int INITIAL_DELAY = 1000;
 
     private ScheduledExecutorService executor;
 
     private PingResponse lastICMPPingResult;
 
-    public void start() throws IOException {
+    public PingResponse getLastICMPPingResult() {
+        return lastICMPPingResult;
+    }
 
-        startICMP();
+    public void start(String[] hosts) throws IOException {
+
+        startICMP(hosts);
         startTCP();
         startTrace();
     }
 
-    private void startICMP() throws IOException {
-        final String hosts = ConfigReader.readAsStringArray("hosts")[0];
-
+    private void startICMP(String[] hosts) throws IOException {
         final Integer delay = ConfigReader.readAsInt("pingDelay");
 
         executor = Executors.newScheduledThreadPool(10);
 
         Runnable pingTask = () -> {
             try {
-                lastICMPPingResult = new ICMPPinger().ping(hosts);
+                lastICMPPingResult = new ICMPPinger().ping(hosts[0]);
 
                 System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastICMPPingResult.getSuccess(), LocalTime.now()));
             } catch (InterruptedException e) {
@@ -42,9 +46,9 @@ public class PingScheduler {
             }
         };
 
-        final int period = nonNull(delay) ? delay : DELAY_DEFAULT;
+        final int period = nonNull(delay) ? delay : INTERVAL;
 
-        executor.scheduleAtFixedRate(pingTask, 0, period, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
     }
 
     private void startTCP() {

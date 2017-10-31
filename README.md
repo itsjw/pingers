@@ -10,3 +10,4 @@
 * Add and justify log4J
 * Justify why build serialization manually
 * Fix assert of PingSchedulerTest
+* Avoid bubble exception
