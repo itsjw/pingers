@@ -27,6 +27,8 @@ public class PingScheduler {
     public PingScheduler(Reporter reporter) {
         this.reporter = reporter;
 
+        this.lastICMPPingResults = new ArrayList<>();
+
         executor = Executors.newScheduledThreadPool(10);
     }
 
@@ -46,26 +48,20 @@ public class PingScheduler {
     private void startICMP(String[] hosts) throws IOException {
         final Integer delay = ConfigReader.readAsInt("pingDelay");
 
-        if (lastICMPPingResults == null) {
-            this.lastICMPPingResults = new ArrayList<>();
-        }
-
         for (String host : hosts) {
 
             Runnable pingTask = () -> {
                 try {
 
                     PingResponse lastResponse = new ICMPPinger().ping(host);
-                    lastICMPPingResults.add(lastResponse);
+                    saveResponse(lastResponse);
 
                     if (!lastResponse.getSuccess()) {
-                        Map<String, String> parameters = new HashMap<>();
-                        parameters.put("last_icmp", lastResponse.getResultMessage());
-                        parameters.put("host", host);
-                        reporter.report(parameters);
+                        sendReport();
                     }
 
                     System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastResponse.getSuccess(), LocalTime.now()));
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -77,6 +73,40 @@ public class PingScheduler {
 
             executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private void sendReport() throws IOException {
+        Map<String, String> parameters = new HashMap<>();
+
+        for (PingResponse response : lastICMPPingResults) {
+            parameters.put("host", response.getHost());
+
+            if ("icmp".equals(response.getPinger())) {
+                parameters.put("last_icmp", response.getResultMessage());
+                continue;
+            }
+
+            if ("tcp".equals(response.getPinger())) {
+                parameters.put("last_tcp", response.getResultMessage());
+                continue;
+            }
+
+            if ("trace".equals(response.getPinger())) {
+                parameters.put("last_trac", response.getResultMessage());
+                continue;
+            }
+        }
+
+        reporter.report(parameters);
+    }
+
+    private void saveResponse(PingResponse lastResponse) {
+
+        lastICMPPingResults.removeIf(result ->
+                result.getPinger().equals(lastResponse.getPinger()) &&
+                        result.getHost().equals(lastResponse.getHost()));
+
+        lastICMPPingResults.add(lastResponse);
     }
 
     private void startTCP() {

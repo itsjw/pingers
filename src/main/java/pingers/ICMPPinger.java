@@ -14,6 +14,8 @@ public class ICMPPinger extends Pinger {
         process.waitFor();
 
         PingResponse response = new PingResponse();
+        response.setHost(host);
+        response.setPinger("icmp");
 
         if (process.exitValue() == 0) {
             response.setSuccess();

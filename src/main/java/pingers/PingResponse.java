@@ -5,6 +5,10 @@ public class PingResponse {
 
     private String resultMessage;
 
+    private String host;
+
+    private String pinger;
+
     public void setSuccess() {
         this.success = true;
     }
@@ -23,5 +27,21 @@ public class PingResponse {
 
     public String getResultMessage() {
         return this.resultMessage;
+    }
+
+    public void setPinger(String pinger) {
+        this.pinger = pinger;
+    }
+
+    public String getPinger() {
+        return this.pinger;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getHost() {
+        return  this.host;
     }
 }
