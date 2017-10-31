@@ -12,3 +12,4 @@
 * Fix assert of PingSchedulerTest
 * Avoid bubble exception
 * Explain why not static methods of Reporter class (TEST DRIVEN design)
+* Parameterize dependency of unit test on URL http

@@ -37,6 +37,6 @@ public class ConfigReaderTest {
         int value = ConfigReader.readAsInt("pingDelay");
 
         // Assert
-        assertEquals(1000, value);
+        assertEquals(500, value);
     }
 }

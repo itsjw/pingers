@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
@@ -30,14 +29,12 @@ public class PingSchedulerTest {
     public void given_list_hosts_when_start_scheduler_should_fill_last_status()
             throws IOException, InterruptedException {
 
-        // Arrange
-
         // Act
-        pingScheduler.start(new String[] { "localhost" });
+        pingScheduler.start(new String[] { "localhost", "172.0.0.1" });
         Thread.sleep(1100);
 
         // Assert
-        assertNotNull("Status is null", pingScheduler.getLastICMPPingResult());
+        assertNotNull("Status is null", pingScheduler.getLastICMPPingResults());
     }
 
     @Test

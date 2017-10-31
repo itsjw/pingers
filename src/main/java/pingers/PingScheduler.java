@@ -2,7 +2,9 @@ package pingers;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,51 +20,63 @@ public class PingScheduler {
 
     private ScheduledExecutorService executor;
 
-    private PingResponse lastICMPPingResult;
+    private List<PingResponse> lastICMPPingResults;
 
     private Reporter reporter;
 
     public PingScheduler(Reporter reporter) {
         this.reporter = reporter;
+
+        executor = Executors.newScheduledThreadPool(10);
     }
 
-    public PingResponse getLastICMPPingResult() {
-        return lastICMPPingResult;
+    public List<PingResponse> getLastICMPPingResults() {
+        return lastICMPPingResults;
     }
 
     public void start(String[] hosts) throws IOException {
 
         startICMP(hosts);
+
         startTCP();
+
         startTrace();
     }
 
     private void startICMP(String[] hosts) throws IOException {
         final Integer delay = ConfigReader.readAsInt("pingDelay");
 
-        executor = Executors.newScheduledThreadPool(10);
+        if (lastICMPPingResults == null) {
+            this.lastICMPPingResults = new ArrayList<>();
+        }
 
-        Runnable pingTask = () -> {
-            try {
-                lastICMPPingResult = new ICMPPinger().ping(hosts[0]);
+        for (String host : hosts) {
 
-                if (!lastICMPPingResult.getSuccess()) {
-                    Map<String, String> parameters = new HashMap<>();
-                    parameters.put("last_icmp", lastICMPPingResult.getResultMessage());
-                    reporter.report(parameters);
+            Runnable pingTask = () -> {
+                try {
+
+                    PingResponse lastResponse = new ICMPPinger().ping(host);
+                    lastICMPPingResults.add(lastResponse);
+
+                    if (!lastResponse.getSuccess()) {
+                        Map<String, String> parameters = new HashMap<>();
+                        parameters.put("last_icmp", lastResponse.getResultMessage());
+                        reporter.report(parameters);
+                    }
+
+                    System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastResponse.getSuccess(), LocalTime.now()));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            };
 
-                System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastICMPPingResult.getSuccess(), LocalTime.now()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
 
-        final int period = nonNull(delay) ? delay : INTERVAL;
+            final int period = nonNull(delay) ? delay : INTERVAL;
 
-        executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
+            executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
+        }
     }
 
     private void startTCP() {
