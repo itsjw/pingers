@@ -10,11 +10,7 @@ import static java.util.Objects.nonNull;
 
 public class Reporter {
 
-    private Reporter() {
-        throw new IllegalStateException("This is a helper class. It is not necessary instantiated it.");
-    }
-
-    public static void report(Map<String, String> messageValues) throws IOException {
+    public void report(Map<String, String> messageValues) throws IOException {
 
         if (messageValues == null)
             return;
@@ -24,7 +20,7 @@ public class Reporter {
         reportMessage(messageValues);
     }
 
-    private static void reportMessage(Map<String, String> messageValues) throws IOException {
+    private void reportMessage(Map<String, String> messageValues) throws IOException {
 
         String urlReport = ConfigReader.readAsString("urlHttpReport");
 

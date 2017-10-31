@@ -2,6 +2,8 @@ package pingers;
 
 import java.io.IOException;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,12 @@ public class PingScheduler {
     private ScheduledExecutorService executor;
 
     private PingResponse lastICMPPingResult;
+
+    private Reporter reporter;
+
+    public PingScheduler(Reporter reporter) {
+        this.reporter = reporter;
+    }
 
     public PingResponse getLastICMPPingResult() {
         return lastICMPPingResult;
@@ -37,6 +45,12 @@ public class PingScheduler {
         Runnable pingTask = () -> {
             try {
                 lastICMPPingResult = new ICMPPinger().ping(hosts[0]);
+
+                if (!lastICMPPingResult.getSuccess()) {
+                    Map<String, String> parameters = new HashMap<>();
+                    parameters.put("last_icmp", lastICMPPingResult.getResultMessage());
+                    reporter.report(parameters);
+                }
 
                 System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastICMPPingResult.getSuccess(), LocalTime.now()));
             } catch (InterruptedException e) {

@@ -11,3 +11,4 @@
 * Justify why build serialization manually
 * Fix assert of PingSchedulerTest
 * Avoid bubble exception
+* Explain why not static methods of Reporter class (TEST DRIVEN design)

@@ -12,10 +12,12 @@ public class ReporterTest {
     public void when_report_message_should_log() throws IOException {
 
         // Arrange
+        Reporter reporter = new Reporter();
+
         Map<String, String> message = new HashMap<>();
         message.put("kk", "vvv");
 
         // Act
-        Reporter.report(message);
+        reporter.report(message);
     }
 }
