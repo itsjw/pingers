@@ -1,7 +1,6 @@
 package pingers;
 
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,10 @@ import static java.util.Objects.nonNull;
 public class PingScheduler {
 
     private static final int INTERVAL = 1000;
-
     private static final int INITIAL_DELAY = 1000;
+    private static final String ICMP = "icmp";
+    private static final String TCP = "tcp";
+    private static final String TRACE = "trace";
 
     private ScheduledExecutorService executor;
 
@@ -30,7 +31,7 @@ public class PingScheduler {
 
         this.lastPingResponses = new ArrayList<>();
 
-        executor = Executors.newScheduledThreadPool(10);
+        executor = Executors.newScheduledThreadPool(12);
     }
 
     public List<PingResponse> getLastPingResponses() {
@@ -39,41 +40,55 @@ public class PingScheduler {
 
     public void start(String[] hosts) throws IOException {
 
-        startICMP(hosts);
-
-        startTCP();
-
-        startTrace();
+        startPinger(ICMP, hosts);
+        startPinger(TCP, hosts);
+        startPinger(TRACE, hosts);
     }
 
-    private void startICMP(String[] hosts) throws IOException {
+    private void startPinger(String pinger, String[] hosts) throws IOException {
         final Integer delay = ConfigReader.readAsInt("pingDelay");
 
         for (String host : hosts) {
 
-            Runnable pingTask = () -> {
-                try {
-
-                    PingResponse lastResponse = new ICMPPinger().ping(host);
-                    saveResponse(lastResponse);
-
-                    if (!lastResponse.getSuccess()) {
-                        sendReport(host);
-                    }
-
-                    System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastResponse.getSuccess(), LocalTime.now()));
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            };
+            Runnable pingTask = getRunnable(pinger, host);
 
             final int period = nonNull(delay) ? delay : INTERVAL;
 
             executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private Runnable getRunnable(String pinger, String host) {
+        return () -> {
+                    try {
+
+                        PingResponse lastResponse = buildPinger(pinger).ping(host);
+                        saveResponse(lastResponse);
+
+                        if (!lastResponse.getSuccess()) {
+                            sendReport(host);
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                };
+    }
+
+    private static Pinger buildPinger(String type) {
+
+        if (ICMP.equals(type))
+            return  new ICMPPinger();
+
+        if (TCP.equals(type))
+            return  new TCPPinger();
+
+        if (TRACE.equals(type))
+            return  new TraceRoutePinger();
+
+        return null;
     }
 
     private void sendReport(String host) throws IOException {
@@ -91,17 +106,17 @@ public class PingScheduler {
 
         for (PingResponse response : lastResultsByHost) {
 
-            if ("icmp".equals(response.getPinger())) {
+            if (ICMP.equals(response.getPinger())) {
                 parameters.replace("last_icmp", response.getResultMessage());
                 continue;
             }
 
-            if ("tcp".equals(response.getPinger())) {
+            if (TCP.equals(response.getPinger())) {
                 parameters.replace("last_tcp", response.getResultMessage());
                 continue;
             }
 
-            if ("trace".equals(response.getPinger())) {
+            if (TRACE.equals(response.getPinger())) {
                 parameters.replace("last_trace", response.getResultMessage());
                 continue;
             }
@@ -119,17 +134,10 @@ public class PingScheduler {
         lastPingResponses.add(lastResponse);
     }
 
-    private void startTCP() {
-    }
-
-    private void startTrace() {
-
-    }
-
     @Override
     protected void finalize() throws Throwable {
 
-        executor.shutdown();
+        executor.shutdownNow();
 
         super.finalize();
     }

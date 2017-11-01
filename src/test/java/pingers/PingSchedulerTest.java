@@ -12,6 +12,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
 public class PingSchedulerTest {
@@ -48,7 +49,7 @@ public class PingSchedulerTest {
         Thread.sleep(1200);
 
         // Assert
-        verify(reporter).report(argThat(new ReportMapArgumentMatcher()));
+        verify(reporter, atLeastOnce()).report(argThat(new ReportMapArgumentMatcher()));
     }
 
     public class ReportMapArgumentMatcher implements ArgumentMatcher<Map<String, String>> {
@@ -58,6 +59,8 @@ public class PingSchedulerTest {
             boolean result = stringStringMap.containsKey("host");
             result &= stringStringMap.get("host").equals("localhosttt");
             result &= stringStringMap.containsKey("last_icmp");
+            result &= stringStringMap.containsKey("last_tcp");
+            result &= stringStringMap.containsKey("last_trace");
             return result;
         }
     }
