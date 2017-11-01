@@ -34,7 +34,7 @@ public class PingSchedulerTest {
         Thread.sleep(1100);
 
         // Assert
-        assertNotNull("Status is null", pingScheduler.getPingResponses());
+        assertNotNull("Status is null", pingScheduler.getLastPingResponses());
     }
 
     @Test

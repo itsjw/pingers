@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.nonNull;
 
@@ -20,20 +21,20 @@ public class PingScheduler {
 
     private ScheduledExecutorService executor;
 
-    private List<PingResponse> pingResponses;
+    private List<PingResponse> lastPingResponses;
 
     private Reporter reporter;
 
     public PingScheduler(Reporter reporter) {
         this.reporter = reporter;
 
-        this.pingResponses = new ArrayList<>();
+        this.lastPingResponses = new ArrayList<>();
 
         executor = Executors.newScheduledThreadPool(10);
     }
 
-    public List<PingResponse> getPingResponses() {
-        return pingResponses;
+    public List<PingResponse> getLastPingResponses() {
+        return lastPingResponses;
     }
 
     public void start(String[] hosts) throws IOException {
@@ -57,7 +58,7 @@ public class PingScheduler {
                     saveResponse(lastResponse);
 
                     if (!lastResponse.getSuccess()) {
-                        sendReport();
+                        sendReport(host);
                     }
 
                     System.out.println(String.format("T:%s, P:%s, %s", Thread.currentThread().getName(), lastResponse.getSuccess(), LocalTime.now()));
@@ -75,11 +76,17 @@ public class PingScheduler {
         }
     }
 
-    private void sendReport() throws IOException {
+    private void sendReport(String host) throws IOException {
         Map<String, String> parameters = new HashMap<>();
 
-        for (PingResponse response : pingResponses) {
-            parameters.put("host", response.getHost());
+        List<PingResponse> lastResultsByHost =
+                lastPingResponses
+                        .stream()
+                        .filter(response -> response.getHost().equals(host))
+                        .collect(Collectors.toList());
+
+        for (PingResponse response : lastResultsByHost) {
+            parameters.put("host", host);
 
             if ("icmp".equals(response.getPinger())) {
                 parameters.put("last_icmp", response.getResultMessage());
@@ -102,11 +109,11 @@ public class PingScheduler {
 
     private void saveResponse(PingResponse lastResponse) {
 
-        pingResponses.removeIf(result ->
+        lastPingResponses.removeIf(result ->
                 result.getPinger().equals(lastResponse.getPinger()) &&
                         result.getHost().equals(lastResponse.getHost()));
 
-        pingResponses.add(lastResponse);
+        lastPingResponses.add(lastResponse);
     }
 
     private void startTCP() {

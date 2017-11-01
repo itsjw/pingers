@@ -1,5 +1,7 @@
 package pingers;
 
+import java.time.LocalDateTime;
+
 public class PingResponse {
     private boolean success;
 
@@ -8,6 +10,8 @@ public class PingResponse {
     private String host;
 
     private String pinger;
+
+    private LocalDateTime when = LocalDateTime.now();
 
     public void setSuccess() {
         this.success = true;
@@ -43,5 +47,9 @@ public class PingResponse {
 
     public String getHost() {
         return  this.host;
+    }
+
+    public LocalDateTime getWhen() {
+        return when;
     }
 }
