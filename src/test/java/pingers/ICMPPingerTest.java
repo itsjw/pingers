@@ -9,7 +9,8 @@ import static org.junit.Assert.*;
 public class ICMPPingerTest {
 
     @Test
-    public void given_accessible_host_when_ping_should_return_success() throws IOException, InterruptedException {
+    public void given_accessible_host_when_ping_should_return_success()
+            throws IOException, InterruptedException {
 
         // Arrange
         Pinger pinger = new ICMPPinger();
@@ -20,10 +21,12 @@ public class ICMPPingerTest {
         // Assert
         assertTrue(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
+        System.out.println(response.getResultMessage());
     }
 
     @Test
-    public void given_inaccessible_host_when_ping_should_return_success() throws IOException, InterruptedException {
+    public void given_inaccessible_host_when_ping_should_return_success()
+            throws IOException, InterruptedException {
 
         // Arrange
         Pinger pinger = new ICMPPinger();
@@ -34,5 +37,6 @@ public class ICMPPingerTest {
         // Assert
         assertFalse(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
+        System.out.println(response.getResultMessage());
     }
 }
