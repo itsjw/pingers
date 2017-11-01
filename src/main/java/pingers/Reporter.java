@@ -51,8 +51,8 @@ public class Reporter {
 
     private static void logMessage(Map<String, String> messageValues) {
 
-        messageValues.forEach((key, value) ->
-                System.out.println(String.format("%s: %s", key, value)));
+//        messageValues.forEach((key, value) ->
+//                System.out.println(String.format("%s: %s", key, value)));
     }
 
     private static String convertToJson(Map<String, String> params) {

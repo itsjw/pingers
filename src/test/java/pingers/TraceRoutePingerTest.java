@@ -47,7 +47,7 @@ public class TraceRoutePingerTest {
         TraceRoutePinger pinger = new TraceRoutePinger();
 
         // Act
-        boolean result = pinger.endsWithTimeout("28  aa.bb cc.dd ee.ff\n29  * * *\n30  * * *\n");
+        boolean result = pinger.endsWithTimeout("28  aa.bb cc.dd ee.ff\n29  * * *\n30  * * *");
 
         // Assert
         assertTrue(result);
@@ -60,7 +60,7 @@ public class TraceRoutePingerTest {
         TraceRoutePinger pinger = new TraceRoutePinger();
 
         // Act
-        boolean result = pinger.endsWithTimeout("1  localhost (127.0.0.1)  0.073 ms  0.017 ms  0.016 ms\n");
+        boolean result = pinger.endsWithTimeout("1  localhost (127.0.0.1)  0.073 ms  0.017 ms  0.016 ms");
 
         // Assert
         assertFalse(result);

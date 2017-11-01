@@ -11,10 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.booleanThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PingSchedulerTest {

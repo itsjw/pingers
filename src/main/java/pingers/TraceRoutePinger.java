@@ -53,7 +53,7 @@ public class TraceRoutePinger extends Pinger {
     }
 
     public boolean endsWithTimeout(String resultMessage) {
-        return resultMessage.endsWith("* * *\n");
+        return resultMessage.endsWith("* * *");
     }
 
     private void setMessageFromStreamOutput(PingResponse response, BufferedReader reader) {
