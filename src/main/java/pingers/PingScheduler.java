@@ -78,6 +78,10 @@ public class PingScheduler {
 
     private void sendReport(String host) throws IOException {
         Map<String, String> parameters = new HashMap<>();
+        parameters.put("host", host);
+        parameters.put("last_icmp", "");
+        parameters.put("last_tcp", "");
+        parameters.put("last_trace", "");
 
         List<PingResponse> lastResultsByHost =
                 lastPingResponses
@@ -86,20 +90,19 @@ public class PingScheduler {
                         .collect(Collectors.toList());
 
         for (PingResponse response : lastResultsByHost) {
-            parameters.put("host", host);
 
             if ("icmp".equals(response.getPinger())) {
-                parameters.put("last_icmp", response.getResultMessage());
+                parameters.replace("last_icmp", response.getResultMessage());
                 continue;
             }
 
             if ("tcp".equals(response.getPinger())) {
-                parameters.put("last_tcp", response.getResultMessage());
+                parameters.replace("last_tcp", response.getResultMessage());
                 continue;
             }
 
             if ("trace".equals(response.getPinger())) {
-                parameters.put("last_trace", response.getResultMessage());
+                parameters.replace("last_trace", response.getResultMessage());
                 continue;
             }
         }
