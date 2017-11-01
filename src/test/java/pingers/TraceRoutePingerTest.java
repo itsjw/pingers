@@ -23,7 +23,6 @@ public class TraceRoutePingerTest {
         // Assert
         assertTrue("Success is false", response.getSuccess());
         assertNotEquals("Message is empty", "", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 
     @Test
@@ -37,9 +36,8 @@ public class TraceRoutePingerTest {
         PingResponse response = pinger.ping("inaccessible.com");
 
         // Assert
-        assertTrue("Success is true", response.getSuccess());
+        assertFalse("Success is true", response.getSuccess());
         assertNotEquals("Message is empty", "", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 
     @Test

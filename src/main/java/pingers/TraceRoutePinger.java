@@ -9,17 +9,17 @@ public class TraceRoutePinger extends Pinger {
 
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {
-        PingResponse response = new PingResponse();
 
-        Process process = null;
+        PingResponse response = new PingResponse();
+        response.setHost(host);
+        response.setPinger("trace");
+
+        Process process;
 
         try {
             process = new ProcessBuilder("traceroute", host).start();
 
             process.waitFor();
-
-            response.setHost(host);
-            response.setPinger("trace");
 
             if (process.exitValue() == 0) {
                 response.setSuccess();

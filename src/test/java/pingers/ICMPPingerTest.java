@@ -21,7 +21,6 @@ public class ICMPPingerTest {
         // Assert
         assertTrue(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 
     @Test
@@ -37,11 +36,11 @@ public class ICMPPingerTest {
         // Assert
         assertFalse(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 
     @Test
     public void given_text_with_packet_lost_when_verify_should_return_true() {
+
         // Arrange
         ICMPPinger pinger = new ICMPPinger();
 
@@ -54,6 +53,7 @@ public class ICMPPingerTest {
 
     @Test
     public void given_text_without_packet_lost_when_verify_should_return_true() {
+
         // Arrange
         ICMPPinger pinger = new ICMPPinger();
 

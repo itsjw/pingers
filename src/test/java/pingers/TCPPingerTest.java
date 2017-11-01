@@ -23,7 +23,6 @@ public class TCPPingerTest {
         // Assert
         assertTrue(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 
     @Test
@@ -39,6 +38,5 @@ public class TCPPingerTest {
         // Assert
         assertFalse(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
-        System.out.println(response.getResultMessage());
     }
 }
