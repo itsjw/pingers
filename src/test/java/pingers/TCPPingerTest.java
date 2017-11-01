@@ -4,19 +4,21 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
-public class ICMPPingerTest {
+public class TCPPingerTest {
 
     @Test
     public void given_accessible_host_when_ping_should_return_success()
             throws IOException, InterruptedException {
 
         // Arrange
-        Pinger pinger = new ICMPPinger();
+        Pinger pinger = new TCPPinger();
 
         // Act
-        PingResponse response = pinger.ping("localhost");
+        PingResponse response = pinger.ping("jasmin.com");
 
         // Assert
         assertTrue(response.getSuccess());
@@ -29,7 +31,7 @@ public class ICMPPingerTest {
             throws IOException, InterruptedException {
 
         // Arrange
-        Pinger pinger = new ICMPPinger();
+        Pinger pinger = new TCPPinger();
 
         // Act
         PingResponse response = pinger.ping("inaccessible");
@@ -38,29 +40,5 @@ public class ICMPPingerTest {
         assertFalse(response.getSuccess());
         assertNotEquals("", response.getResultMessage());
         System.out.println(response.getResultMessage());
-    }
-
-    @Test
-    public void given_text_with_packet_lost_when_verify_should_return_true() {
-        // Arrange
-        ICMPPinger pinger = new ICMPPinger();
-
-        // Act
-        boolean result = pinger.hasPacketLost("10% packet loss");
-
-        // Assert
-        assertTrue(result);
-    }
-
-    @Test
-    public void given_text_without_packet_lost_when_verify_should_return_true() {
-        // Arrange
-        ICMPPinger pinger = new ICMPPinger();
-
-        // Act
-        boolean result = pinger.hasPacketLost("0% packet loss");
-
-        // Assert
-        assertFalse(result);
     }
 }

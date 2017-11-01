@@ -61,6 +61,7 @@ public class ICMPPinger extends Pinger {
     }
 
     private void setMessageFromStreamOutput(PingResponse response, BufferedReader reader) {
+
         StringJoiner output = new StringJoiner(System.getProperty("line.separator"));
         reader.lines().iterator().forEachRemaining(output::add);
         response.setResultMessage(output.toString());
