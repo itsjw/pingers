@@ -37,8 +37,34 @@ public class TraceRoutePingerTest {
         PingResponse response = pinger.ping("inaccessible.com");
 
         // Assert
-        assertFalse("Success is true", response.getSuccess());
+        assertTrue("Success is true", response.getSuccess());
         assertNotEquals("Message is empty", "", response.getResultMessage());
         System.out.println(response.getResultMessage());
+    }
+
+    @Test
+    public void given_result_message_ending_with_stars_when_verify_should_return_true() {
+
+        // Arrange
+        TraceRoutePinger pinger = new TraceRoutePinger();
+
+        // Act
+        boolean result = pinger.endsWithTimeout("28  aa.bb cc.dd ee.ff\n29  * * *\n30  * * *\n");
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void given_result_message_ending_without_stars_when_verify_should_return_false() {
+
+        // Arrange
+        TraceRoutePinger pinger = new TraceRoutePinger();
+
+        // Act
+        boolean result = pinger.endsWithTimeout("1  localhost (127.0.0.1)  0.073 ms  0.017 ms  0.016 ms\n");
+
+        // Assert
+        assertFalse(result);
     }
 }
