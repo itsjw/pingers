@@ -49,6 +49,10 @@ public class PingResponse {
         return  this.host;
     }
 
+    public void setWhenToNow() {
+        this.when = LocalDateTime.now();
+    }
+
     public LocalDateTime getWhen() {
         return when;
     }

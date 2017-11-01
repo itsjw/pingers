@@ -40,6 +40,8 @@ public class ICMPPinger extends Pinger {
             process.destroy();
         }
 
+        response.setWhenToNow();
+
         return response;
     }
 }
