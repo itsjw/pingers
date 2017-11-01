@@ -26,7 +26,7 @@ public class ICMPPinger extends Pinger {
 
             final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-            setMessageFromStreamOutput(process, response, reader);
+            setMessageFromStreamOutput(response, reader);
 
             if (hasPacketLost(response.getResultMessage())) {
                 response.setUnsucess();
@@ -37,7 +37,7 @@ public class ICMPPinger extends Pinger {
 
             final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
-            setMessageFromStreamOutput(process, response, reader);
+            setMessageFromStreamOutput(response, reader);
         }
 
         response.setWhenToNow();
@@ -60,7 +60,7 @@ public class ICMPPinger extends Pinger {
         return false;
     }
 
-    private void setMessageFromStreamOutput(Process process, PingResponse response, BufferedReader reader) {
+    private void setMessageFromStreamOutput(PingResponse response, BufferedReader reader) {
         StringJoiner output = new StringJoiner(System.getProperty("line.separator"));
         reader.lines().iterator().forEachRemaining(output::add);
         response.setResultMessage(output.toString());
