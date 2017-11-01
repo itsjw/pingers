@@ -99,7 +99,7 @@ public class PingScheduler {
             }
 
             if ("trace".equals(response.getPinger())) {
-                parameters.put("last_trac", response.getResultMessage());
+                parameters.put("last_trace", response.getResultMessage());
                 continue;
             }
         }

@@ -10,6 +10,8 @@ public class TCPPinger extends Pinger {
     PingResponse ping(String host) throws InterruptedException, IOException {
 
         PingResponse response = new PingResponse();
+        response.setHost(host);
+        response.setPinger("tcp");
 
         URL url = new URL(buildURL(host));
         long startTime = System.currentTimeMillis();
