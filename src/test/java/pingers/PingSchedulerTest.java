@@ -2,14 +2,19 @@ package pingers;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.booleanThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class PingSchedulerTest {
@@ -43,9 +48,20 @@ public class PingSchedulerTest {
 
         // Act
         pingScheduler.start(new String[] { "localhosttt" });
-        Thread.sleep(1100);
+        Thread.sleep(1200);
 
         // Assert
-        verify(reporter).report(anyMap());
+        verify(reporter).report(argThat(new ReportMapArgumentMatcher()));
+    }
+
+    public class ReportMapArgumentMatcher implements ArgumentMatcher<Map<String, String>> {
+
+        @Override
+        public boolean matches(Map<String, String> stringStringMap) {
+            boolean result = stringStringMap.containsKey("host");
+            result &= stringStringMap.get("host").equals("localhosttt");
+            result &= stringStringMap.containsKey("last_icmp");
+            return result;
+        }
     }
 }
