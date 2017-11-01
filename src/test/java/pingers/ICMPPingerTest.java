@@ -39,4 +39,28 @@ public class ICMPPingerTest {
         assertNotEquals("", response.getResultMessage());
         System.out.println(response.getResultMessage());
     }
+
+    @Test
+    public void given_text_with_packet_lost_when_verify_should_return_true() {
+        // Arrange
+        ICMPPinger pinger = new ICMPPinger();
+
+        // Act
+        boolean result = pinger.hasPacketLost("10% packet loss");
+
+        // Assert
+        assertTrue(result);
+    }
+
+    @Test
+    public void given_text_without_packet_lost_when_verify_should_return_true() {
+        // Arrange
+        ICMPPinger pinger = new ICMPPinger();
+
+        // Act
+        boolean result = pinger.hasPacketLost("0% packet loss");
+
+        // Assert
+        assertFalse(result);
+    }
 }

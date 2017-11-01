@@ -4,8 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringJoiner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ICMPPinger extends Pinger {
+
+    public static final String PACKET_LOSS_REGEX = "(\\d+)\\% packet loss";
 
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {
@@ -23,6 +27,10 @@ public class ICMPPinger extends Pinger {
             final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             setMessageFromStreamOutput(process, response, reader);
+
+            if (hasPacketLost(response.getResultMessage())) {
+                response.setUnsucess();
+            }
         }
         else {
             response.setUnsucess();
@@ -37,6 +45,19 @@ public class ICMPPinger extends Pinger {
         process.destroy();
 
         return response;
+    }
+
+    public boolean hasPacketLost(String outputtMessage) {
+
+        Pattern pattern = Pattern.compile(PACKET_LOSS_REGEX);
+        Matcher matcher = pattern.matcher(outputtMessage);
+
+        if (matcher.find()) {
+            String number = matcher.group(1);
+            return Integer.parseInt(number) > 0;
+        }
+
+        return false;
     }
 
     private void setMessageFromStreamOutput(Process process, PingResponse response, BufferedReader reader) {
