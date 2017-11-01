@@ -20,20 +20,20 @@ public class PingScheduler {
 
     private ScheduledExecutorService executor;
 
-    private List<PingResponse> lastICMPPingResults;
+    private List<PingResponse> pingResponses;
 
     private Reporter reporter;
 
     public PingScheduler(Reporter reporter) {
         this.reporter = reporter;
 
-        this.lastICMPPingResults = new ArrayList<>();
+        this.pingResponses = new ArrayList<>();
 
         executor = Executors.newScheduledThreadPool(10);
     }
 
-    public List<PingResponse> getLastICMPPingResults() {
-        return lastICMPPingResults;
+    public List<PingResponse> getPingResponses() {
+        return pingResponses;
     }
 
     public void start(String[] hosts) throws IOException {
@@ -78,7 +78,7 @@ public class PingScheduler {
     private void sendReport() throws IOException {
         Map<String, String> parameters = new HashMap<>();
 
-        for (PingResponse response : lastICMPPingResults) {
+        for (PingResponse response : pingResponses) {
             parameters.put("host", response.getHost());
 
             if ("icmp".equals(response.getPinger())) {
@@ -102,11 +102,11 @@ public class PingScheduler {
 
     private void saveResponse(PingResponse lastResponse) {
 
-        lastICMPPingResults.removeIf(result ->
+        pingResponses.removeIf(result ->
                 result.getPinger().equals(lastResponse.getPinger()) &&
                         result.getHost().equals(lastResponse.getHost()));
 
-        lastICMPPingResults.add(lastResponse);
+        pingResponses.add(lastResponse);
     }
 
     private void startTCP() {
