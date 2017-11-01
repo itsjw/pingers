@@ -25,13 +25,21 @@ public class TCPPinger extends Pinger {
             response.setSuccess();
             response.setResultMessage(String.format("HTTP Status Code: %s, Elapsed Time: %s", httpStatusCode, elapsedTime));
 
+            if (isHttpStatusCodeInErrorRange(httpStatusCode)) {
+                response.setUnsucess();
+            }
+
         } catch (Exception exception) {
 
             response.setUnsucess();
-            response.setResultMessage(exception.getMessage());
+            response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
         }
 
         return response;
+    }
+
+    private boolean isHttpStatusCodeInErrorRange(Integer httpStatusCode) {
+        return httpStatusCode >= 400;
     }
 
     private String buildURL(String host) {
