@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static java.util.Objects.nonNull;
+
 public class TCPPinger extends Pinger {
 
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
@@ -24,6 +26,7 @@ public class TCPPinger extends Pinger {
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
+            connection.setConnectTimeout(getTimeout());
 
             Integer httpStatusCode = connection.getResponseCode();
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -43,6 +46,13 @@ public class TCPPinger extends Pinger {
         }
 
         return response;
+    }
+
+    private int getTimeout() throws IOException {
+        Integer timeout = ConfigReader.readAsInt("tcp.HttpTimeout");
+
+        // 2000 by default
+        return nonNull(timeout) ? timeout : 2000;
     }
 
     private boolean isHttpStatusCodeInErrorRange(Integer httpStatusCode) {

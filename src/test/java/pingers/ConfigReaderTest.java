@@ -34,7 +34,7 @@ public class ConfigReaderTest {
     public void given_valid_file_when_read_int_property_should_return_value() throws IOException {
 
         // Act
-        int value = ConfigReader.readAsInt("pingDelay");
+        int value = ConfigReader.readAsInt("icmppinger.pingDelay");
 
         // Assert
         assertEquals(500, value);

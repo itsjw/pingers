@@ -50,16 +50,21 @@ public class PingScheduler {
     }
 
     private void startPinger(String pinger, String[] hosts) throws IOException {
-        final Integer delay = ConfigReader.readAsInt("pingDelay");
 
         for (String host : hosts) {
 
             Runnable pingTask = getRunnable(pinger, host);
 
+            Integer delay = getDelay(pinger);
+
             final int period = nonNull(delay) ? delay : INTERVAL;
 
             executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
+    }
+
+    private Integer getDelay(String pinger) throws IOException {
+        return ConfigReader.readAsInt(pinger + ".PingDelay");
     }
 
     private Runnable getRunnable(String pinger, String host) {
