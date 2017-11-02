@@ -1,5 +1,7 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,38 +13,47 @@ public class ICMPPinger extends Pinger {
 
     public static final String PACKET_LOSS_REGEX = "(\\d+)\\% packet loss";
 
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
+
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {
-
-        Process process = new ProcessBuilder("ping", host, "-c 5").start();
-        process.waitFor();
 
         PingResponse response = new PingResponse();
         response.setHost(host);
         response.setPinger("icmp");
 
-        if (process.exitValue() == 0) {
-            response.setSuccess();
+        try {
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            Process process = new ProcessBuilder("ping", host, "-c 5").start();
+            process.waitFor();
 
-            setMessageFromStreamOutput(response, reader);
+            if (process.exitValue() == 0) {
+                response.setSuccess();
 
-            if (hasPacketLost(response.getResultMessage())) {
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+                setMessageFromStreamOutput(response, reader);
+
+                if (hasPacketLost(response.getResultMessage())) {
+                    response.setUnsucess();
+                }
+            } else {
                 response.setUnsucess();
+
+                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+                setMessageFromStreamOutput(response, reader);
             }
-        }
-        else {
+
+            process.destroy();
+        } catch (Exception exception) {
+
+            logger.error(exception);
             response.setUnsucess();
-
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-            setMessageFromStreamOutput(response, reader);
+            response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
         }
 
         response.setWhenToNow();
-
-        process.destroy();
 
         return response;
     }
