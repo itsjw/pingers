@@ -18,7 +18,7 @@ public class TCPPingerTest {
         Pinger pinger = new TCPPinger();
 
         // Act
-        PingResponse response = pinger.ping("jasmin.com");
+        PingResponse response = pinger.getResponse("jasmin.com");
 
         // Assert
         assertTrue(response.getSuccess());
@@ -33,7 +33,7 @@ public class TCPPingerTest {
         Pinger pinger = new TCPPinger();
 
         // Act
-        PingResponse response = pinger.ping("inaccessible");
+        PingResponse response = pinger.getResponse("inaccessible");
 
         // Assert
         assertFalse(response.getSuccess());

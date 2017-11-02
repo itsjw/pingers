@@ -71,15 +71,13 @@ public class PingScheduler {
         return () -> {
                     try {
 
-                        PingResponse lastResponse = buildPinger(pinger).ping(host);
+                        PingResponse lastResponse = buildPinger(pinger).getResponse(host);
                         saveResponse(lastResponse);
 
                         if (!lastResponse.getSuccess()) {
                             sendReport(host);
                         }
 
-                    } catch (InterruptedException e) {
-                        logger.error(e);
                     } catch (IOException e) {
                         logger.error(e);
                     }

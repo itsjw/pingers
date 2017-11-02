@@ -18,7 +18,7 @@ public class TraceRoutePingerTest {
         Pinger pinger = new TraceRoutePinger();
 
         // Act
-        PingResponse response = pinger.ping("localhost");
+        PingResponse response = pinger.getResponse("localhost");
 
         // Assert
         assertTrue("Success is false", response.getSuccess());
@@ -33,7 +33,7 @@ public class TraceRoutePingerTest {
         Pinger pinger = new TraceRoutePinger();
 
         // Act
-        PingResponse response = pinger.ping("inaccessible.com");
+        PingResponse response = pinger.getResponse("inaccessible.com");
 
         // Assert
         assertFalse("Success is true", response.getSuccess());

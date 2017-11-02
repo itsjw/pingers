@@ -12,47 +12,33 @@ public class TraceRoutePinger extends Pinger {
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @Override
-    PingResponse ping(String host) throws InterruptedException, IOException {
+    PingResponse ping(String host, PingResponse response) throws InterruptedException, IOException {
 
-        PingResponse response = new PingResponse();
-        response.setHost(host);
         response.setPinger("trace");
 
-        Process process;
+        Process process = new ProcessBuilder("traceroute", host).start();
 
-        try {
-            process = new ProcessBuilder("traceroute", host).start();
+        process.waitFor();
 
-            process.waitFor();
+        if (process.exitValue() == 0) {
+            response.setSuccess();
 
-            if (process.exitValue() == 0) {
-                response.setSuccess();
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            setMessageFromStreamOutput(response, reader);
 
-                setMessageFromStreamOutput(response, reader);
-
-                if (endsWithTimeout(response.getResultMessage())) {
-                    response.setUnsucess();
-                }
-            } else {
+            if (endsWithTimeout(response.getResultMessage())) {
                 response.setUnsucess();
-
-                final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-                setMessageFromStreamOutput(response, reader);
             }
-
-            process.destroy();
-
-        } catch (Exception exception) {
-
-            logger.error(exception);
+        } else {
             response.setUnsucess();
-            response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
+
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            setMessageFromStreamOutput(response, reader);
         }
 
-        response.setWhenToNow();
+        process.destroy();
 
         return response;
     }

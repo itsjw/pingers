@@ -13,36 +13,25 @@ public class TCPPinger extends Pinger {
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @Override
-    PingResponse ping(String host) throws InterruptedException, IOException {
+    PingResponse ping(String host, PingResponse response) throws InterruptedException, IOException {
 
-        PingResponse response = new PingResponse();
-        response.setHost(host);
         response.setPinger("tcp");
 
         URL url = new URL(buildURL(host));
         long startTime = System.currentTimeMillis();
 
-        try {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(getTimeout());
 
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(getTimeout());
+        Integer httpStatusCode = connection.getResponseCode();
+        long elapsedTime = System.currentTimeMillis() - startTime;
 
-            Integer httpStatusCode = connection.getResponseCode();
-            long elapsedTime = System.currentTimeMillis() - startTime;
+        response.setSuccess();
+        response.setResultMessage(String.format("HTTP Status Code: %s, Elapsed Time: %s", httpStatusCode, elapsedTime));
 
-            response.setSuccess();
-            response.setResultMessage(String.format("HTTP Status Code: %s, Elapsed Time: %s", httpStatusCode, elapsedTime));
-
-            if (isHttpStatusCodeInErrorRange(httpStatusCode)) {
-                response.setUnsucess();
-            }
-
-        } catch (Exception exception) {
-
-            logger.error(exception);
+        if (isHttpStatusCodeInErrorRange(httpStatusCode)) {
             response.setUnsucess();
-            response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
         }
 
         return response;

@@ -16,7 +16,7 @@ public class ICMPPingerTest {
         Pinger pinger = new ICMPPinger();
 
         // Act
-        PingResponse response = pinger.ping("localhost");
+        PingResponse response = pinger.getResponse("localhost");
 
         // Assert
         assertTrue(response.getSuccess());
@@ -31,7 +31,7 @@ public class ICMPPingerTest {
         Pinger pinger = new ICMPPinger();
 
         // Act
-        PingResponse response = pinger.ping("inaccessible");
+        PingResponse response = pinger.getResponse("inaccessible");
 
         // Assert
         assertFalse(response.getSuccess());
