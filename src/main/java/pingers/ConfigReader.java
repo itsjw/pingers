@@ -11,7 +11,7 @@ import static java.util.Objects.nonNull;
 
 public class ConfigReader {
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(ConfigReader.class);
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     private static final String CONFIG_FILE_NAME = "config.properties";
 

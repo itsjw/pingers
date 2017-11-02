@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class Application {
 
-    private static final Logger logger = LogManager.getLogger(Application.class);
+    private static final Logger logger = LogManager.getLogger();
 
     public static void main(String args[]) throws IOException {
 

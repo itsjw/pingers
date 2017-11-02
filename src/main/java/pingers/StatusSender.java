@@ -10,7 +10,7 @@ import static java.util.Objects.nonNull;
 
 public class StatusSender {
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     public void report(Map<String, String> messageValues) throws IOException {
 

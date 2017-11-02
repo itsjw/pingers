@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class TCPPinger extends Pinger {
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {

@@ -28,7 +28,7 @@ public class PingScheduler {
 
     private StatusSender statusSender;
 
-    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger();
 
     public PingScheduler(StatusSender statusSender) {
         this.statusSender = statusSender;
