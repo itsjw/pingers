@@ -10,7 +10,7 @@
 
 ## Task list
 
-* Improve log to output
+* Improve log to console output
 * Avoid bubble exception
 * Parameterize dependency of unit test of URL http
 * Comments
