@@ -5,7 +5,7 @@
 * `cd server-mock\express-es6-rest-api`
 * `npm install`
 * `npm run dev`
-* Uncomment urlHttpReport property of config.properties file
+* Uncomment *urlHttpReport* property of config.properties file
 
 ## Task list
 
