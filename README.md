@@ -2,7 +2,6 @@
 
 ## Task list
 
-* Add timeout to pingers
 * Improve messages returned in ResponseMessage
 * Justify why build serialization manually
 * Avoid bubble exception
