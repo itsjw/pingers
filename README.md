@@ -1,4 +1,4 @@
-# pingers
+# Pingers
 
 ## How to run the target mock application  that receives status reported
 * Install npm & nodejs
