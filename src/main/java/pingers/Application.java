@@ -11,6 +11,8 @@ public class Application {
 
     public static void main(String args[]) throws IOException {
 
+        logger.info("Starting app");
+
         String[] hosts = ConfigReader.readAsStringArray("hosts");
 
         PingScheduler scheduler = new PingScheduler(new StatusSender());
