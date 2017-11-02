@@ -18,7 +18,7 @@ import static org.mockito.Mockito.verify;
 public class PingSchedulerTest {
 
     @Mock
-    Reporter reporter;
+    StatusSender statusSender;
 
     @InjectMocks
     PingScheduler pingScheduler;
@@ -49,7 +49,7 @@ public class PingSchedulerTest {
         Thread.sleep(1200);
 
         // Assert
-        verify(reporter, atLeastOnce()).report(argThat(new ReportMapArgumentMatcher()));
+        verify(statusSender, atLeastOnce()).report(argThat(new ReportMapArgumentMatcher()));
     }
 
     public class ReportMapArgumentMatcher implements ArgumentMatcher<Map<String, String>> {

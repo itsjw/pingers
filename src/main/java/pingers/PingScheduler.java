@@ -1,5 +1,7 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +26,12 @@ public class PingScheduler {
 
     private List<PingResponse> lastPingResponses;
 
-    private Reporter reporter;
+    private StatusSender statusSender;
 
-    public PingScheduler(Reporter reporter) {
-        this.reporter = reporter;
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
+
+    public PingScheduler(StatusSender statusSender) {
+        this.statusSender = statusSender;
 
         this.lastPingResponses = new ArrayList<>();
 
@@ -70,9 +74,9 @@ public class PingScheduler {
                         }
 
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e);
                     }
                 };
     }
@@ -122,7 +126,7 @@ public class PingScheduler {
             }
         }
 
-        reporter.report(parameters);
+        statusSender.report(parameters);
     }
 
     private void saveResponse(PingResponse lastResponse) {

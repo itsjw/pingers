@@ -1,10 +1,14 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class TCPPinger extends Pinger {
+
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
 
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {
@@ -33,6 +37,7 @@ public class TCPPinger extends Pinger {
 
         } catch (Exception exception) {
 
+            logger.error(exception);
             response.setUnsucess();
             response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
         }

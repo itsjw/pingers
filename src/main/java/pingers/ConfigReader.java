@@ -1,5 +1,7 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,6 +10,8 @@ import java.util.Properties;
 import static java.util.Objects.nonNull;
 
 public class ConfigReader {
+
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(ConfigReader.class);
 
     private static final String CONFIG_FILE_NAME = "config.properties";
 
@@ -50,6 +54,8 @@ public class ConfigReader {
             }
         } catch (NumberFormatException numberFormatException) {
             converted = null;
+
+            logger.error(numberFormatException);
         }
 
         return converted;

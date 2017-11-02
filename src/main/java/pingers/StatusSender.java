@@ -1,14 +1,16 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
-
 import static java.util.Objects.nonNull;
 
-public class Reporter {
+public class StatusSender {
+
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
 
     public void report(Map<String, String> messageValues) throws IOException {
 
@@ -18,6 +20,22 @@ public class Reporter {
         logMessage(messageValues);
 
         reportMessage(messageValues);
+    }
+
+    private void logMessage(Map<String, String> messageValues) {
+
+        StringBuilder message = new StringBuilder();
+
+        messageValues.forEach((key, value) -> {
+            message.append(key);
+            message.append(":");
+            message.append(value);
+            message.append(",");
+        });
+
+        message.deleteCharAt(message.length() - 1);
+
+        logger.warn(message.toString());
     }
 
     private void reportMessage(Map<String, String> messageValues) throws IOException {
@@ -47,12 +65,6 @@ public class Reporter {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestMethod("GET");
         return connection;
-    }
-
-    private static void logMessage(Map<String, String> messageValues) {
-
-//        messageValues.forEach((key, value) ->
-//                System.out.println(String.format("%s: %s", key, value)));
     }
 
     private static String convertToJson(Map<String, String> params) {

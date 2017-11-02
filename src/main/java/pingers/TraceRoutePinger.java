@@ -1,11 +1,15 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringJoiner;
 
 public class TraceRoutePinger extends Pinger {
+
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(StatusSender.class);
 
     @Override
     PingResponse ping(String host) throws InterruptedException, IOException {
@@ -43,6 +47,7 @@ public class TraceRoutePinger extends Pinger {
 
         } catch (Exception exception) {
 
+            logger.error(exception);
             response.setUnsucess();
             response.setResultMessage(exception.getClass().getSimpleName() + ": " + exception.getMessage());
         }

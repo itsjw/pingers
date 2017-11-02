@@ -1,21 +1,22 @@
 package pingers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Application {
 
-    final static Logger logger = Logger.getLogger(Application.class.getSimpleName());
+    private static final Logger logger = LogManager.getLogger(Application.class);
 
     public static void main(String args[]) throws IOException {
 
         String[] hosts = ConfigReader.readAsStringArray("hosts");
 
-        PingScheduler scheduler = new PingScheduler(new Reporter());
+        PingScheduler scheduler = new PingScheduler(new StatusSender());
 
         scheduler.start(hosts);
 
-        logger.log(Level.INFO, "App started");
+        logger.info("App started");
     }
 }
