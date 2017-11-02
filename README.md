@@ -9,7 +9,10 @@
 
 ## Task list
 
+* Improve log to output
 * Avoid bubble exception
-* Explain why not static methods of Reporter class (TEST DRIVEN design)
-* Parameterize dependency of unit test on URL http
-* Separate delay to different pinger
+* Parameterize dependency of unit test of URL http
+* Comments
+* Remove setPinger of Pinger implementations
+* Identify and adapt commands to SO
+
