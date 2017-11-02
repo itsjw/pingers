@@ -41,7 +41,7 @@ public class PingSchedulerTest {
     }
 
     @Test
-    public void given_scheduler_started_when_ping_failed_should_report_status()
+    public void given_started_scheduler_when_ping_failed_should_report_status()
             throws IOException, InterruptedException {
 
         // Act

@@ -6,6 +6,7 @@
 * `npm install`
 * `npm run dev`
 * Uncomment **urlHttpReport** property of config.properties file
+* Run unit tests. Just PingSchedulerTest depends of this mock application.
 
 ## Task list
 
@@ -15,4 +16,4 @@
 * Comments
 * Remove setPinger of Pinger implementations
 * Identify and adapt commands to SO
-
+* Remove dependency of external mock in unit tests
