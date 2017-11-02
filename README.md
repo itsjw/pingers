@@ -1,6 +1,6 @@
 # pingers
 
-## How to run the mock application target to receive status reported
+## How to run the target mock application  that receives status reported
 * Install npm & nodejs
 * `cd server-mock\express-es6-rest-api`
 * `npm install`
