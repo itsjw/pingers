@@ -23,7 +23,7 @@ public class TraceRoutePinger extends Pinger {
         if (process.exitValue() == 0) {
             response.setSuccess();
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             setMessageFromStreamOutput(response, reader);
 
@@ -33,7 +33,7 @@ public class TraceRoutePinger extends Pinger {
         } else {
             response.setUnsucess();
 
-            final BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
 
             setMessageFromStreamOutput(response, reader);
         }

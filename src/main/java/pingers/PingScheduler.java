@@ -57,7 +57,7 @@ public class PingScheduler {
 
             Integer delay = getDelay(pinger);
 
-            final int period = nonNull(delay) ? delay : INTERVAL;
+            int period = nonNull(delay) ? delay : INTERVAL;
 
             executor.scheduleAtFixedRate(pingTask, INITIAL_DELAY, period, TimeUnit.MILLISECONDS);
         }
